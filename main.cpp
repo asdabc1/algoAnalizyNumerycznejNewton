@@ -20,11 +20,13 @@ bool operator<(std::pair<double, double>& a, std::pair<double, double>& b) {
 }
 
 Polynomial Newton(std::vector<std::pair<double, double> >& v) {
-	auto temp = v.end();
 	std::sort(v.begin(), v.end());
-	if (temp != std::unique(v.begin(), v.end())) {
-		std::cerr << "wezly musza byc rozne!!!\n";
-		return Polynomial();
+
+	for (int i = 1; i < v.size() - 1; i++) {
+		if (v[i].first == v[i - 1].first || v[i].first == v[i + 1].first) {
+			std::cerr << "Wartosci wezlow musza byc unikatowe!\n";
+			return Polynomial();
+		}
 	}
 
 	if (v.size() == 0)
@@ -32,36 +34,35 @@ Polynomial Newton(std::vector<std::pair<double, double> >& v) {
 
 	const int SIZE = v.size();
 
-	double** array = new double*[SIZE];							
+	double** array = new double*[SIZE];
 	for (int i = 0; i < SIZE; i++)
 		array[i] = new double[SIZE + 1];
 
 	for (int i = 0; i < SIZE; i++) {
-		for (int j = 0; j < SIZE + 1; j++)
+		for (int j = 2; j < SIZE + 1; j++)
 			array[i][j] = 0;
 	}
 
 	for (int i = 0; i < SIZE; i++) {
 		array[i][0] = v[i].first;
-		array[i][1] = v[i].second;									
+		array[i][1] = v[i].second;
 	}
 
-	for (int i = 2; i <= SIZE; i++) {					
-		for (int j = i - 1; j < SIZE; j++) {			
+	for (int i = 2; i <= SIZE; i++) {
+		for (int j = i - 1; j < SIZE; j++) {
 			array[j][i] = (array[j][i - 1] - array[j - 1][i - 1]) / (array[j][0] - array[j - i + 1][0]);
 		}
 	}
 
 	Polynomial* temporary = new Polynomial[SIZE - 1];
 	for (int i = 0; i < SIZE - 1; i++) {
-		temporary[i] = {1, -1 * array[i][0]};
+		temporary[i] = { 1, -1 * array[i][0] };
 	}
 
-	Polynomial result;
-	result = Polynomial{array[0][1]};
+	Polynomial result = Polynomial{ array[0][1] };
 	Polynomial t;
 	for (int i = 0; i < SIZE - 1; i++) {
-		t = Polynomial({ array[i + 1][i + 2] });
+		t = Polynomial{ array[i + 1][i + 2] };
 		for (int j = i; j >= 0; j--)
 			t *= temporary[j];
 		result += t;
