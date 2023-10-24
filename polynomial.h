@@ -26,10 +26,17 @@ public:
 	Polynomial& operator*=(const Polynomial& p);
 	Polynomial operator*(double a);
 	Polynomial operator+(const Polynomial& p);
+	Polynomial operator+(const double a);
+	Polynomial& operator+=(const double a);
 	Polynomial& operator+=(const Polynomial& p);
+	Polynomial operator/(const double a);
+	Polynomial& operator/=(const double a);
+
+	friend Polynomial operator+(const double a, const Polynomial& p);
 
 	double value(const double x);
 	std::vector<double> derivatives(const double x);
 	void show();
 	void setLim(double a, double b);
+	void unlock() { locked = false; }
 };

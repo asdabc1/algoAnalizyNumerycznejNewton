@@ -124,8 +124,23 @@ Polynomial Polynomial::operator*(const Polynomial& p) {
 	return result;
 }
 
+Polynomial Polynomial::operator/(const double a) {
+	Polynomial result(*this);
+	result.locked = false;
+
+	for (int i = 0; i <= degree; i++)
+		coefficients[i] /= a;
+
+	return result;
+}
+
 Polynomial& Polynomial::operator*=(const Polynomial& p) {
 	*this = *this * p;
+	return *this;
+}
+
+Polynomial& Polynomial::operator/=(const double a) {
+	*this = *this * a;
 	return *this;
 }
 
@@ -160,6 +175,18 @@ Polynomial Polynomial::operator+(const Polynomial& p) {
 			result.coefficients[i] += this->coefficients[i];
 	}
 	return result;
+}
+
+Polynomial Polynomial::operator+(const double a) {
+	Polynomial result(*this);
+
+	this->coefficients[degree] += a;
+	return *this;
+}
+
+Polynomial& Polynomial::operator+=(const double a) {
+	*this = *this + a;
+	return *this;
 }
 
 Polynomial& Polynomial::operator+=(const Polynomial& p) {
@@ -214,4 +241,11 @@ void Polynomial::setLim(double a, double b) {
 	locked = true;
 	limits[0] = a > b ? b : a;
 	limits[1] = a > b ? a : b;
+}
+
+Polynomial operator+(const double a, const Polynomial& p) {
+	Polynomial result(p);
+
+	result.coefficients[result.degree] += a;
+	return result;
 }
