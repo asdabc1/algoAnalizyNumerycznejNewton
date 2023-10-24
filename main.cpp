@@ -10,7 +10,8 @@ Polynomial Newton(std::vector<std::pair<double, double> >& v);
 int main() {
 	std::vector<std::pair<double, double> > dane = { {-4, -1}, {-2, -7}, {0, -21}, {1, -1}, {3, 573} };
 	Polynomial ans = Newton(dane);
-	//ans.show();
+	ans.show();
+	std::cout << std::endl << ans.value(2);
 	return 0;
 }
 
@@ -31,7 +32,7 @@ Polynomial Newton(std::vector<std::pair<double, double> >& v) {
 
 	const int SIZE = v.size();
 
-	double** array = new double*[SIZE];							//array[row][column]
+	double** array = new double*[SIZE];							
 	for (int i = 0; i < SIZE; i++)
 		array[i] = new double[SIZE + 1];
 
@@ -42,11 +43,11 @@ Polynomial Newton(std::vector<std::pair<double, double> >& v) {
 
 	for (int i = 0; i < SIZE; i++) {
 		array[i][0] = v[i].first;
-		array[i][1] = v[i].second;									//fills first two columns with values specified in the vector
+		array[i][1] = v[i].second;									
 	}
 
-	for (int i = 2; i <= SIZE; i++) {					//column choice
-		for (int j = i - 1; j < SIZE; j++) {			//row choice
+	for (int i = 2; i <= SIZE; i++) {					
+		for (int j = i - 1; j < SIZE; j++) {			
 			array[j][i] = (array[j][i - 1] - array[j - 1][i - 1]) / (array[j][0] - array[j - i + 1][0]);
 		}
 	}
@@ -64,13 +65,6 @@ Polynomial Newton(std::vector<std::pair<double, double> >& v) {
 		for (int j = i; j >= 0; j--)
 			t *= temporary[j];
 		result += t;
-	}
-
-	for (int i = 0; i < SIZE; i++) {
-		for (int j = 0; j < SIZE + 1; j++) {
-			std::cout << array[i][j] << "\t";
-		}
-		std::cout << std::endl;
 	}
 
 	delete[] temporary;
